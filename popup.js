@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////////////
+//                             CLASSES                               //
+///////////////////////////////////////////////////////////////////////
+
 function transaction(date, tod, amount, account, units, transtype, terminal) {
     this.date = date;
     this.tod = tod;
@@ -8,8 +12,10 @@ function transaction(date, tod, amount, account, units, transtype, terminal) {
     this.terminal = terminal;
 }
 
-//var myFather = new person("John", "Doe", 50, "blue");
-//var myMother = new person("Sally", "Rally", 48, "green");
+
+///////////////////////////////////////////////////////////////////////
+//                            FUNCTIONS                              //
+///////////////////////////////////////////////////////////////////////
 
 function getSpendingsCallBack(data) {
 
