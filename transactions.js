@@ -5,9 +5,9 @@
 function transaction(date, tod, amount, account, units, transtype, terminal) {
     this.date = date;
     this.tod = tod;
-    this.amount = amount;
-    this.account = account;
-    this.units = units;
+    this.amount = Number(amount);
+    this.account = Number(account);
+    this.units = Number(units);
     this.transtype = transtype;
     this.terminal = terminal;
 }
