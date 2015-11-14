@@ -1,17 +1,25 @@
-function transaction(date, time, price, type, loc) {
+function transaction(date, tod, amount, account, units, transtype, terminal) {
     this.date = date;
     this.tod = tod;
-    this.price = price;
+    this.amount = amount;
     this.account = account;
-    this.loc = loc;
+    this.units = units;
+    this.transtype = transtype;
+    this.terminal = terminal;
 }
 
 //var myFather = new person("John", "Doe", 50, "blue");
 //var myMother = new person("Sally", "Rally", 48, "green");
 
-
 function getSpendingsCallBack(data) {
-  console.log(data);
+
+  var re = /<tr><td id='oneweb_financial_history_td_date'>(\d{2}\/\d{2}\/\d{4})<\/td><td id='oneweb_financial_history_td_time'>(\d{2}:\d{2}:\d{2})<\/td><td id='oneweb_financial_history_td_amount' align='right'> *(.*?)<\/td><td id='oneweb_financial_history_td_bal'>(.)<\/td><td id='oneweb_financial_history_td_units' align='right'>(\d)<\/td><td id='oneweb_financial_history_td_trantype'>(.*?)<\/td><td id='oneweb_financial_history_td_terminal'>(.*?) *<\/td>\s*<\/tr>/g;
+  var m;
+  var res = [];
+  while (m = re.exec(data)) {
+    res.push(new transaction(m[1],m[2],m[3],m[4],m[5],m[6],m[7]));
+  }
+  console.log(res);
 }
 
 function getSpendings(id,pin,from,to) {
