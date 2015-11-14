@@ -1,9 +1,11 @@
 {
   "manifest_version": 2,
 
-  "name": "Getting started example",
-  "description": "This extension shows a Google Image search result for the current page",
-  "version": "1.0",
+  "name": "WatCard Balance",
+  "version": "1",
+
+  "description": "Provides information about WatCard balance and spending.",
+
 
   "browser_action": {
     "default_icon": "icon.png",
@@ -11,6 +13,7 @@
   },
   "permissions": [
     "activeTab",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "https://account.watcard.uwaterloo.ca/*"
   ]
 }
