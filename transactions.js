@@ -20,11 +20,7 @@ function transaction(date, tod, amount, account, units, transtype, terminal) {
 function getSpendingsCallBack(data) {
   var m;
   var res = [];
-  var re = /<B><PRE id="oneweb_account_name">(.*?),(.*\.)<\/PRE><\/B>/;
-  
-  m = re.exec(data);
-  name = m[2].replace(/\./g, ' ')+m[1];
-
+ 
   re = /<tr><td id='oneweb_financial_history_td_date'>(\d{2}\/\d{2}\/\d{4})<\/td><td id='oneweb_financial_history_td_time'>(\d{2}:\d{2}:\d{2})<\/td><td id='oneweb_financial_history_td_amount' align='right'> *(.*?)<\/td><td id='oneweb_financial_history_td_bal'>(.)<\/td><td id='oneweb_financial_history_td_units' align='right'>(\d)<\/td><td id='oneweb_financial_history_td_trantype'>(.*?)<\/td><td id='oneweb_financial_history_td_terminal'>(.*?) *<\/td>\s*<\/tr>/g;
   
   while (m = re.exec(data)) {
@@ -32,10 +28,6 @@ function getSpendingsCallBack(data) {
   }
 
   transactionsLoaded = true;
-  loadPopupIfReady();
-
-  console.log(res);
-
 }
 
 function getSpendings(id,pin,from,to) {
