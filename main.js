@@ -13,8 +13,7 @@ $("body").on('click', '#login_button', function() {
 });
 
 $(document).ready(function() {
-	
-  //chrome.storage.sync.clear();
+  currentClass = "loading";
 
   chrome.storage.sync.get("login", function(obj) {
    
@@ -28,5 +27,4 @@ $(document).ready(function() {
     }
   
   });
-
 });

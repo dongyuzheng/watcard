@@ -1,0 +1,15 @@
+
+.loading {
+	width: 120px;
+	height: 120px;
+	background: url('chrome-extension://__MSG_@@extension_id__/loading.gif');
+	background-repeat: no-repeat;
+}
+
+.overview {
+	width: 300px;
+}
+
+.graphs {
+	
+}

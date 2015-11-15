@@ -18,26 +18,25 @@ function balance(num, balType, balName, price, amount, credit) {
 
 function getBalanceCallBack(data) {
 
+  var re = /<B><PRE id="oneweb_account_name">(.*?),(.*\.)<\/PRE><\/B>/;  
+  var m = re.exec(data);
+  name = m[2].replace(/\./g, ' ')+m[1];
 
-  var re = /<TD ID="oneweb_balance_information_td_number"  ALIGN=right>(.) *<\/TD>\s*<TD ID="oneweb_balance_information_td_type"  ALIGN=left> (.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_name"  ALIGN=left>(.*?) *<\/TD>\s*<TD ID="oneweb_balance_information_td_percent"  ALIGN=right>---- <\/TD>\s*<TD ID="oneweb_balance_information_td_price"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_amount"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_credit"  ALIGN=right> *(.*?)<\/TD>\s*<\/tr>/g;
-  var m;
-  var res = [];
+  re = /<TD ID="oneweb_balance_information_td_number"  ALIGN=right>(.) *<\/TD>\s*<TD ID="oneweb_balance_information_td_type"  ALIGN=left> (.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_name"  ALIGN=left>(.*?) *<\/TD>\s*<TD ID="oneweb_balance_information_td_percent"  ALIGN=right>---- <\/TD>\s*<TD ID="oneweb_balance_information_td_price"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_amount"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_credit"  ALIGN=right> *(.*?)<\/TD>\s*<\/tr>/g;
 
   while (m = re.exec(data)) {
-    res.push(new balance(m[1],m[2],m[3],m[4],m[5],m[6]));
+    balances.push(new balance(m[1],m[2],m[3],m[4],m[5],m[6]));
   }
 
   for (var i = 0; i < 3; i++) {
-  	mealPlan += res[i]["amount"];
+  	mealPlan += balances[i]["amount"];
   }
   for (var i = 3; i < 6; i++) {
-  	flex += res[i]["amount"];
+  	flex += balances[i]["amount"];
   }
 
   balanceLoaded = true;
-  loadPopupIfReady();
-
-  console.log(res);
+  loadOverview();
 }
 
 function getBalance(id,pin) {
