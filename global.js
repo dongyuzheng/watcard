@@ -111,6 +111,11 @@ function generateIntervalChart() {
     options['chart']['type'] = 'column';
     options['title']['text'] = 'Spendings in the Past Month';
     options['yAxis']['title']['text'] = "Money Spent";
+    options['plotOptions'] = {
+      'column': {
+        color: "#fcd905"
+      }
+    };
     options.series.push(dataSeries); 
     chart = new Highcharts.Chart(options)
 
@@ -151,6 +156,11 @@ function generateBalanceChart() {
     options['title']['text'] = 'Balance Over Time';
     options['yAxis']['min'] = 0;
     options['yAxis']['title']['text'] = "Balance";
+    options['plotOptions'] = {
+      'area': {
+        color: "#f8e779"
+      }
+    };
     options.series.push(dataSeries);
 
     chart = new Highcharts.Chart(options);
@@ -215,6 +225,7 @@ function generateBasicOptions() {
             text: ""
           }
         },
+        plotOptions: {},
         series: [],
         tooltip: {
             followPointer: true,
