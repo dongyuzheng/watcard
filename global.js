@@ -19,17 +19,23 @@ var currentGraph = "interval";
  	"interval" : spendings per interval (day, week, month); bar graph
 	"net" : total balance over time (change); area
 */
+function resetVariables() {
+  balanceLoaded = false;
+  transactionsLoaded = false;
 
-var login_html =  '<form>' +
-                    'Waterloo ID:<br>' +
-                    '<input type="text" id="uid">' +
-                    '<br>' +
-                    'WatCard Pin:<br>' +
-                    '<input type="password" id="pin"><br>' +
-                    '<input type="checkbox" id="remember">Remember me' +
-                    '<br><br>' +
-                  '</form>' +
-                  '<button id="login_button" type="button">Login</button>';
+  name = "";
+  balances = [];
+  flex = 0;
+  mealPlan = 0;
+   transactions = [];
+}
+
+function loadLogin() {
+  changeClass("login");
+  $("#popup-info").load(chrome.extension.getURL("login.html"), function() {
+
+  })
+}
 
 function loadOverview() {
   if (balanceLoaded){
@@ -44,7 +50,9 @@ function loadOverview() {
       })
 
       $("#logout").click(function() {
-        $("#popup-info").html(login_html);
+        chrome.storage.sync.clear();
+        resetVariables();
+        loadLogin();
       })
 
     });

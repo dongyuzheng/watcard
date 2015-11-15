@@ -20,7 +20,7 @@ $(document).ready(function() {
     var id, pin;
 
     if (obj.login == null) {
-      $("#popup-info").html(login_html);
+      loadLogin();
     }
     else {
       return login(obj.login.uid,obj.login.pin);
