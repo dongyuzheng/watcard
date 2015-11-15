@@ -169,7 +169,7 @@ function generateBasicData() {
     }
     if (existingObj != -1) {
       dataSet[existingObj]["y"] -= amount;
-      dataSet[existingObj]["transactions"].push({location:location,amount:-1*amount});
+      dataSet[existingObj]["transactions"].push({location: location , amount: -1 * amount});
     } else {
       var dateObj = {
         date: date,
@@ -183,30 +183,30 @@ function generateBasicData() {
 }
 
 function generateBasicOptions() {
-    var options = {
-        'chart': {
-          'renderTo':'container'
+    return options = {
+        chart: {
+          renderTo:'container'
         },
-        'title': {
-          'text': ''
+        title: {
+          text: ''
         },
-        'xAxis': {
+        xAxis: {
           type: 'datetime',
           labels: {
             step: 2,
             rotation: -45
           },
-          'tickInterval': 1000 * 3600 * 24,
-          'alternateGridColor': '#FAFAFA'
+          tickInterval: 1000 * 3600 * 24,
+          alternateGridColor: '#FAFAFA'
         },
-        'yAxis': {
-          'min': 0
+        yAxis: {
+          min: 0
         },
-        'series': [],
-        'tooltip': {
-            'followPointer': true,
-            'hideDelay': 100,
-            'formatter': function() {
+        series: [],
+        tooltip: {
+            followPointer: true,
+            hideDelay: 100,
+            formatter: function() {
                 var pt = this.point;
                 var str= pt["date"].toDateString() + " - $" + formatNum(pt["y"]) + "<br>";
                 for (var i = 0; i < pt["transactions"].length; i++) {
@@ -215,18 +215,17 @@ function generateBasicOptions() {
                 }
             return str;
             },
-            'plotOptions': {
-                'series': {
-                    'cursor':'pointer'
+            plotOptions: {
+                series: {
+                    cursor: 'pointer'
                 },
-                'stickyTracking' : true
+                stickyTracking : true
             }     
         },
         credits: {
             enabled: false
         }
     };
-    return options;
 }
 
 function formatNum(num) {
