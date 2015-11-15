@@ -16,13 +16,27 @@ function login(id,pin) {
   getSpendings(id,pin,mm+'/'+dd+'/'+yyyy,today);
 }
 
-$("body").on('click', '#login_button', function() {
+
+function performLogin() {
   var id = $("#uid").val();
   var pin = $("#pin").val();
+  if (id.length != 8 || pin.length != 4) {
+    return;
+  }
   if ($('#remember').prop('checked')) {
     chrome.storage.sync.set({login: {"uid" : id, "pin": pin}});
   }
   return login(id,pin);
+}
+
+$("body").on('click', '#login_button', function() {
+  performLogin();
+});
+
+$("body").on('keypress', '#uid,#pin', function(e) {
+  if(e.which == 13) {
+      performLogin();;
+  }
 });
 
 $(document).ready(function() {
