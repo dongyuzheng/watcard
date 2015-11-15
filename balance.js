@@ -34,8 +34,8 @@ function getBalanceCallBack(data) {
   for (var i = 3; i < 6; i++) {
   	flex += res[i]["amount"];
   }
-  $("#meal-plan").html(""+mealPlan);
-  $("#flex").html(""+flex);
+  $("#meal-plan").html("$"+mealPlan);
+  $("#flex").html("$"+flex);
 
   console.log(res);
 
