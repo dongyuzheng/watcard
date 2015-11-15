@@ -90,9 +90,9 @@ function generateIntervalChart() {
         for (var i = 0; i < dataSet.length-1; i++) {
             dateOne = dataSet[i]["date"];
             dateTwo = dataSet[i+1]["date"];
-            if (dateTwo.getTime() - dateOne.getTime() > 24 * 3600 * 1000) {
+            if (dateTwo - dateOne > 24 * 3600 * 1000) {
                 dataSet.splice(i + 1, 0, {
-                    date: new Date(dateOne.getYear() + 1900, dateOne.getMonth(), dateOne.getDate() + 1),
+                    date: dateOne + 24 * 3600 * 1000,
                     y: 0,
                     transactions: []
                 });
@@ -103,13 +103,14 @@ function generateIntervalChart() {
     dataSeries = {
         showInLegend: false,
         data: dataSet,
-        pointStart: dataSet[0]["date"].getTime(),
+        pointStart: dataSet[0]["date"],
         pointInterval: 24 * 3600 * 1000
     }
 
     options = generateBasicOptions();
     options['chart']['type'] = 'column';
     options['title']['text'] = 'Spendings in the Past Month';
+    options['yAxis']['title']['text'] = "Money Spent";
     options.series.push(dataSeries); 
     chart = new Highcharts.Chart(options)
 
@@ -126,24 +127,30 @@ function generateBalanceChart() {
     generateBasicData();
     var currentDate = new Date();
     dataSet.push({
-        date: currentDate,
+        date: currentDate.getTime(),
         y: flex + mealPlan,
         transactions: []
     });
+    for (var i = 0; i < dataSet.length; i++) {
+      dataSet[i]["x"] = dataSet[i]["date"];
+    }
     for (var i = dataSet.length-2; i >= 0; i--) {
-    dataSet[i]["y"] += dataSet[i+1]["y"];
+      dataSet[i]["y"] += dataSet[i+1]["y"];
     }
 
     dataSeries = {
         showInLegend: false,
         data:dataSet,
-        pointStart: dataSet[0]["date"].getTime(),
-        pointInterval: 24 * 3600 * 1000
+        pointStart: dataSet[0]["date"]
+        //pointInterval: 24 * 3600 * 1000
     }
+
+
     options = generateBasicOptions();
-    options['chart']['type'] = 'line';
+    options['chart']['type'] = 'area';
     options['title']['text'] = 'Balance Over Time';
     options['yAxis']['min'] = 0;
+    options['yAxis']['title']['text'] = "Balance";
     options.series.push(dataSeries);
 
     chart = new Highcharts.Chart(options);
@@ -156,13 +163,13 @@ function generateBalanceChart() {
 function generateBasicData() {
   for (var i = 0; i < transactions.length; i++) { // generates dataSet from transactions
     var transaction = transactions[i];
-    var date = new Date(transaction["date"]);
+    var date = new Date(transaction["date"]).getTime();
     var amount = transaction["amount"];
     var location = transaction["terminal"];
     
     var existingObj = -1;
     for (var j = 0; j < dataSet.length; j++){
-      if (dataSet[j]["date"].getTime() == date.getTime()) {
+      if (dataSet[j]["date"] == date) {
         existingObj = j;
         break;
       }
@@ -200,7 +207,13 @@ function generateBasicOptions() {
           alternateGridColor: '#FAFAFA'
         },
         yAxis: {
-          min: 0
+          min: 0,
+          labels: {
+            format: "${value}"
+          },
+          title: {
+            text: ""
+          }
         },
         series: [],
         tooltip: {
@@ -208,7 +221,8 @@ function generateBasicOptions() {
             hideDelay: 100,
             formatter: function() {
                 var pt = this.point;
-                var str= pt["date"].toDateString() + " - $" + formatNum(pt["y"]) + "<br>";
+                var d = new Date(pt["date"]);
+                var str= d.toDateString() + " - $" + formatNum(pt["y"]) + "<br>";
                 for (var i = 0; i < pt["transactions"].length; i++) {
                     var tr = pt["transactions"][i];
                     str += tr["location"] + ": <b>$" + formatNum(tr["amount"]) + "</b><br>";
@@ -234,10 +248,10 @@ function formatNum(num) {
 
 function sortByDate() {
     return function(a,b) {
-        if (a["date"].getTime() < b["date"].getTime()){ 
+        if (a["date"] < b["date"]){ 
             return -1;
         } 
-        else if (a["date"].getTime() > b["date"].getTime()) {
+        else if (a["date"] > b["date"]) {
             return 1;
         }
         return 0;
