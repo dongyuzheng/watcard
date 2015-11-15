@@ -35,9 +35,7 @@ function getBalanceCallBack(data) {
   }
 
   balanceLoaded = true;
-  if (popupReady()){
-  	setPopup();
-  }
+  loadPopupIfReady();
 
   console.log(res);
 }

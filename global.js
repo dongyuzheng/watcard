@@ -10,6 +10,10 @@ function loadPopupIfReady() {
   	  $("#user").html(name);
   	  $("#flex").html("$"+flex);
   	  $("#meal-plan").html("$"+mealPlan);
+
+  	  $("#details").click(function() {
+  	  	alert("button pressed");
+      })
     });
   }
 }
