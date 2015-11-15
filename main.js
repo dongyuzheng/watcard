@@ -33,7 +33,7 @@ $("body").on('click', '#login_button', function() {
   performLogin();
 });
 
-$("body").on('keypress', '#uid,#pin', function(e) {
+$("body").on('keypress', '#uid,#pin,#remember', function(e) {
   if(e.which == 13) {
       performLogin();;
   }
