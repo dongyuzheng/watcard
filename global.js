@@ -236,9 +236,10 @@ function formatNum(num) {
 function sortByDate() {
     return function(a,b) {
         if (a["date"].getTime() < b["date"].getTime()){ 
-          return -1;
-        } else if (a["date"].getTime() > b["date"].getTime()) {
-          return 1;
+            return -1;
+        } 
+        else if (a["date"].getTime() > b["date"].getTime()) {
+            return 1;
         }
         return 0;
     }
