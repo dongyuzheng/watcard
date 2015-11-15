@@ -23,21 +23,20 @@ function getBalanceCallBack(data) {
   name = m[2].replace(/\./g, ' ')+m[1];
 
   re = /<TD ID="oneweb_balance_information_td_number"  ALIGN=right>(.) *<\/TD>\s*<TD ID="oneweb_balance_information_td_type"  ALIGN=left> (.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_name"  ALIGN=left>(.*?) *<\/TD>\s*<TD ID="oneweb_balance_information_td_percent"  ALIGN=right>---- <\/TD>\s*<TD ID="oneweb_balance_information_td_price"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_amount"  ALIGN=right> *(.*?)<\/TD>\s*<TD ID="oneweb_balance_information_td_credit"  ALIGN=right> *(.*?)<\/TD>\s*<\/tr>/g;
-  var res = [];
 
   while (m = re.exec(data)) {
-    res.push(new balance(m[1],m[2],m[3],m[4],m[5],m[6]));
+    balances.push(new balance(m[1],m[2],m[3],m[4],m[5],m[6]));
   }
 
   for (var i = 0; i < 3; i++) {
-  	mealPlan += res[i]["amount"];
+  	mealPlan += balances[i]["amount"];
   }
   for (var i = 3; i < 6; i++) {
-  	flex += res[i]["amount"];
+  	flex += balances[i]["amount"];
   }
 
   balanceLoaded = true;
-  loadPopupIfReady();
+  loadOverview();
 }
 
 function getBalance(id,pin) {
