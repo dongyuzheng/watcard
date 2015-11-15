@@ -3,7 +3,7 @@ function login(id,pin) {
 
   var date = new Date();
   var dd = date.getDate() + 1;
-  var mm = date.getMonth()+1; //January is 0!
+  var mm = date.getMonth() + 1; //January is 0!
   var yyyy = date.getFullYear();
 
   var today = mm+'/'+dd+'/'+yyyy;

@@ -70,14 +70,14 @@ function generateChart() {
     dataSet = [];
     switch(currentGraph) {
         case "interval":
-          generateIntervalChart();
-          break;
+            generateIntervalChart();
+            break;
         case "net":
-          generateBalanceChart();
-          break;
+            generateBalanceChart();
+            break;
         default:
-          generateIntervalData();
-          break;
+            generateIntervalData();
+            break;
     }
 }
 
@@ -148,8 +148,8 @@ function generateBalanceChart() {
 
     chart = new Highcharts.Chart(options);
 
-    var daysUntilZeroBalance =dataSet[dataSet.length-1]['y']/(dataSet[0]['y'] - dataSet[dataSet.length-1]['y'])*30;
-    var d = new Date(currentDate.getYear()+1900, currentDate.getMonth(), currentDate.getDate()+Math.round(daysUntilZeroBalance));
+    var daysUntilZeroBalance = dataSet[dataSet.length - 1]['y'] / (dataSet[0]['y'] - dataSet[dataSet.length-1]['y']) * 30;
+    var d = new Date(currentDate.getYear() + 1900, currentDate.getMonth(), currentDate.getDate() + Math.round(daysUntilZeroBalance));
     $("#information").html("Projected date to have zero balance: " + d.toDateString());
 }
 
