@@ -128,42 +128,34 @@ function generateIntervalChart() {
   }
 
   dataSeries = {
+    showInLegend: false,
     data:dataSet,
     pointStart: dataSet[0]["date"].getTime(),
     pointInterval: 24 * 3600 * 1000
   }
-  options = generateChartOptions();
+  options = generateIntervalChartOptions();
   options.series.push(dataSeries);
 
   chart = new Highcharts.Chart(options)
 }
 
-function sortByDate() {
-    return function(a,b) {
-        if (a["date"].getTime() < b["date"].getTime()){ 
-          return -1;
-        } else if (a["date"].getTime() > b["date"].getTime()) {
-          return 1;
-        }
-        return 0;
-    }
-}
-
-function generateChartOptions() {
+function generateIntervalChartOptions() {
   var options = {
     'chart': {
       'type':'column',
       'renderTo':'container'
     },
     'title': {
-      'text': 'Spendings per day'
+      'text': 'Spendings in the past month'
     },
 
     'xAxis': {
       type: 'datetime',
       labels: {
-        step: 1
+        step: 2,
+        rotation: -45
       },
+      'tickInterval': 1000 * 3600 * 24,
       'alternateGridColor': '#FAFAFA'
     },
     /*
@@ -190,10 +182,10 @@ function generateChartOptions() {
       'hideDelay':100,
       'formatter':function() {
         var pt = this.point;
-        var str= pt["date"] + "<br>";
+        var str= pt["date"].toDateString() + " - $" + formatNum(pt["y"]) + "<br>";
         for (var i = 0; i < pt["transactions"].length; i++) {
           var tr = pt["transactions"][i];
-          str+="<b>" + tr["location"] + "<b>: $" + tr["amount"]+"<br>";
+          str+=tr["location"] + ": <b>$" + formatNum(tr["amount"])+"</b><br>";
         }
         return str;
 
@@ -209,13 +201,20 @@ function generateChartOptions() {
   return options;
 }
 
+function formatNum(num){
+  return parseFloat(Math.round(num * 100) / 100).toFixed(2);
+}
 
-
-
-
-
-
-
+function sortByDate() {
+    return function(a,b) {
+        if (a["date"].getTime() < b["date"].getTime()){ 
+          return -1;
+        } else if (a["date"].getTime() > b["date"].getTime()) {
+          return 1;
+        }
+        return 0;
+    }
+}
 
 //loading, overview, graphs
 function changeClass(newClass) {
