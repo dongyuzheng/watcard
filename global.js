@@ -6,6 +6,7 @@ var balances = [];
 var flex = 0;
 var mealPlan = 0;
 var transactions = [];
+var startTime, endTime;
 
 var interval = "day";
 var currentClass = "loading";
@@ -155,12 +156,25 @@ function generateBalanceChart() {
 
     chart = new Highcharts.Chart(options);
 
-    var daysUntilZeroBalance = dataSet[dataSet.length - 1]['y'] / (dataSet[0]['y'] - dataSet[dataSet.length-1]['y']) * 30;
-    var d = new Date(currentDate.getYear() + 1900, currentDate.getMonth(), currentDate.getDate() + Math.round(daysUntilZeroBalance));
-    $("#information").html("Projected date to have zero balance: " + d.toDateString());
+    var changeInBalance = dataSet[0]['y'] - dataSet[dataSet.length-1]['y'];
+    if (changeInBalance > 0 && dataSet[dataSet.length-1]['y'] > 0) {
+        var daysUntilZeroBalance = dataSet[dataSet.length - 1]['y'] / (dataSet[0]['y'] - dataSet[dataSet.length-1]['y']) * 30;
+        var d = new Date(currentDate.getYear() + 1900, currentDate.getMonth(), currentDate.getDate() + Math.round(daysUntilZeroBalance));
+        $("#information").html("Projected date to have zero balance: " + d.toDateString());
+    }
 }
 
 function generateBasicData() {
+    dataSet.push({
+        date:startTime,
+        y: 0,
+        transactions:[]
+    })
+    dataSet.push({
+        date:endTime,
+        y: 0,
+        transactions:[]
+    })
   for (var i = 0; i < transactions.length; i++) { // generates dataSet from transactions
     var transaction = transactions[i];
     var date = new Date(transaction["date"]).getTime();

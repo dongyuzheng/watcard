@@ -5,13 +5,14 @@ function login(id,pin) {
   var dd = date.getDate() + 1;
   var mm = date.getMonth() + 1; //January is 0!
   var yyyy = date.getFullYear();
-
+  endTime = Date.parse(mm+"/"+dd+"/"+yyyy);
   var today = mm+'/'+dd+'/'+yyyy;
 
   date.setMonth(date.getMonth() - 1);
   dd = date.getDate();
   mm = date.getMonth() + 1; //January is 0!
   yyyy = date.getFullYear();
+  startTime = Date.parse(mm+"/"+dd+"/"+yyyy);
 
   getSpendings(id,pin,mm+'/'+dd+'/'+yyyy,today);
 }
