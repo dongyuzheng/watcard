@@ -211,7 +211,7 @@ function generateBasicOptions() {
                 var str= pt["date"].toDateString() + " - $" + formatNum(pt["y"]) + "<br>";
                 for (var i = 0; i < pt["transactions"].length; i++) {
                     var tr = pt["transactions"][i];
-                    str += tr["location"] + ": <b>$" + formatNum(tr["amount"])+"</b><br>";
+                    str += tr["location"] + ": <b>$" + formatNum(tr["amount"]) + "</b><br>";
                 }
             return str;
             },
