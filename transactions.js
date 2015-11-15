@@ -18,6 +18,11 @@ function transaction(date, tod, amount, account, units, transtype, terminal) {
 ///////////////////////////////////////////////////////////////////////
 
 function getSpendingsCallBack(data) {
+  
+  if (data.indexOf("The Account or PIN code is incorrect!") > -1) {
+    return loadLogin();
+  }
+
   var m;
  
   re = /<tr><td id='oneweb_financial_history_td_date'>(\d{2}\/\d{2}\/\d{4})<\/td><td id='oneweb_financial_history_td_time'>(\d{2}:\d{2}:\d{2})<\/td><td id='oneweb_financial_history_td_amount' align='right'> *(.*?)<\/td><td id='oneweb_financial_history_td_bal'>(.)<\/td><td id='oneweb_financial_history_td_units' align='right'>(\d)<\/td><td id='oneweb_financial_history_td_trantype'>(.*?)<\/td><td id='oneweb_financial_history_td_terminal'>(.*?) *<\/td>\s*<\/tr>/g;

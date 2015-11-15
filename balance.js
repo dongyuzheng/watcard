@@ -18,6 +18,10 @@ function balance(num, balType, balName, price, amount, credit) {
 
 function getBalanceCallBack(data) {
 
+  if (data.indexOf("The Account or PIN code is incorrect!") > -1) {
+    return loadLogin();
+  }
+
   var re = /<B><PRE id="oneweb_account_name">(.*?),(.*\.)<\/PRE><\/B>/;  
   var m = re.exec(data);
   name = m[2].replace(/\./g, ' ')+m[1];

@@ -9,9 +9,9 @@ function login(id,pin) {
   var today = mm+'/'+dd+'/'+yyyy;
 
   date.setMonth(date.getMonth() - 1);
-  dd = today.getDate();
-  mm = today.getMonth() + 1; //January is 0!
-  yyyy = today.getFullYear();
+  dd = date.getDate();
+  mm = date.getMonth() + 1; //January is 0!
+  yyyy = date.getFullYear();
 
   getSpendings(id,pin,mm+'/'+dd+'/'+yyyy,today);
 }
