@@ -8,9 +8,17 @@ var mealPlan = 0;
 var transactions = [];
 
 
-
 var currentClass = "loading";
-
+/*
+	"loading" : displays loading .gif
+	"overview" : displays current balance
+	"graphs" : displays in-depth information
+*/
+var currentGraph = "interval";
+/*
+ 	"interval" : spendings per interval (day, week, month); bar graph
+	"net" : total balance over time (change); area
+*/
 
 
 
@@ -23,13 +31,22 @@ function loadOverview() {
   	  $("#meal-plan").html("$"+mealPlan);
 
   	  $("#details").click(function() {
-  	  	alert("button pressed");
+  	  	loadGraphs();
       })
     });
   }
 }
 
-//loading, overview, 
+function loadGraphs() {
+	if (transactionsLoaded) {
+	  changeClass("");
+	  $("#popup-info").load(chrome.extension.getURL("graphs.html"), function() {
+    });
+	}
+}
+
+
+//loading, overview, graphs
 function changeClass(newClass) {
 	$("#popup-info").removeClass(currentClass);
 	currentClass = newClass;
