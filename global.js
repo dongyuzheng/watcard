@@ -67,7 +67,6 @@ function loadOverview() {
 
 function loadGraphs() {
 	if (transactionsLoaded) {
-	  changeClass("loading");
 	  $("#popup-info").load(chrome.extension.getURL("graphs.html"), function() {
       changeClass("graphs");
       generateChart();
@@ -89,13 +88,13 @@ function generateChart() {
 function generateIntervalChart() {
   for (var i = 0; i < transactions.length; i++) { // generates dataSet from transactions
     var transaction = transactions[i];
-    var date = transaction["date"];
+    var date = new Date(transaction["date"]);
     var amount = transaction["amount"];
     var location = transaction["terminal"];
     
     var existingObj = -1;
     for (var j = 0; j < dataSet.length; j++){
-      if (dataSet[j]["date"] == date) {
+      if (dataSet[j]["date"].getTime() == date.getTime()) {
         existingObj = j;
         break;
       }
@@ -112,15 +111,43 @@ function generateIntervalChart() {
       dataSet.push(dateObj);
     }
   }
+  dataSet.sort(sortByDate());
+  if (dataSet.length >= 2) { // fills in empty days
+    var dateOne, dateTwo;
+    for (var i = 0; i < dataSet.length-1; i++) {
+      dateOne = dataSet[i]["date"];
+      dateTwo = dataSet[i+1]["date"];
+      if (dateTwo.getTime() - dateOne.getTime() > 24 * 3600 * 1000) {
+        dataSet.splice(i+1,0,{
+          date: new Date(dateOne.getYear()+1900, dateOne.getMonth(), dateOne.getDate()+1),
+          amount: 0,
+          transactions: []
+        });
+      }
+    }
+  }
 
-  dataSeries = {data:dataSet}
+  dataSeries = {
+    data:dataSet,
+    pointStart: dataSet[0]["date"].getTime(),
+    pointInterval: 24 * 3600 * 1000
+  }
   options = generateChartOptions();
   options.series.push(dataSeries);
 
   chart = new Highcharts.Chart(options)
 }
 
-
+function sortByDate() {
+    return function(a,b) {
+        if (a["date"].getTime() < b["date"].getTime()){ 
+          return -1;
+        } else if (a["date"].getTime() > b["date"].getTime()) {
+          return 1;
+        }
+        return 0;
+    }
+}
 
 function generateChartOptions() {
   var options = {
@@ -132,14 +159,14 @@ function generateChartOptions() {
       'text': 'Spendings per day'
     },
 
-   /* 'xAxis': {
-      'categories': [],
-      'labels' : {
-        'step' : 1
+    'xAxis': {
+      type: 'datetime',
+      labels: {
+        step: 1
       },
       'alternateGridColor': '#FAFAFA'
     },
-
+    /*
     'yAxis': [{
       'title': {
         'text': yAxisLabel
@@ -163,17 +190,20 @@ function generateChartOptions() {
       'hideDelay':100,
       'formatter':function() {
         var pt = this.point;
-        var str="";
+        var str= pt["date"] + "<br>";
         for (var i = 0; i < pt["transactions"].length; i++) {
           var tr = pt["transactions"][i];
-          str+=tr["location"] + ": $" + tr["amount"]+"\n";
+          str+="<b>" + tr["location"] + "<b>: $" + tr["amount"]+"<br>";
         }
         return str;
 
-      }
-      /*'plotOptions': {
+      },
+      'plotOptions': {
+        'series': {
+          'cursor':'pointer'
+        },
         'stickyTracking' : true
-      }*/
+      }
     }
   };
   return options;
