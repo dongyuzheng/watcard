@@ -2,6 +2,7 @@
   "manifest_version": 2,
 
   "name": "WatCard Balance",
+  "short_name":"WatBalance",
   "version": "1",
 
   "description": "Provides information about WatCard balance and spending.",
@@ -11,9 +12,10 @@
     "default_icon": "icon128.png",
     "default_popup": "popup.html"
   },
-  "icons": { "16": "icon16.png",
-           "48": "icon48.png",
-            "128": "icon128.png" 
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png" 
   },
   "permissions": [
     "tabs",
