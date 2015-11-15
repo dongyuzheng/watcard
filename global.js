@@ -34,6 +34,7 @@ function resetVariables() {
    transactions = [];
 }
 
+// Loads the login page
 function loadLogin() {
   changeClass("loading");
   $("#popup-info").load(chrome.extension.getURL("login.html"), function() {
@@ -41,6 +42,7 @@ function loadLogin() {
   })
 }
 
+// Loads the overview page
 function loadOverview() {
   if (balanceLoaded){
     changeClass("loading");
@@ -51,20 +53,13 @@ function loadOverview() {
   	  $("#flex").html("$"+flex);
   	  $("#meal-plan").html("$"+mealPlan);
 
-  	  $("#details").click(function() {
-  	  	loadGraphs();
-      })
-
-      $("#logout").click(function() {
-        chrome.storage.sync.clear();
-        resetVariables();
-        loadLogin();
-      })
+  	  
 
     });
   }
 }
 
+// Loads either graph page
 function loadGraphs() {
 	if (transactionsLoaded) {
 	  $("#popup-info").load(chrome.extension.getURL("graphs.html"), function() {
@@ -80,12 +75,86 @@ function generateChart() {
     case "interval":
       generateIntervalChart();
       break;
+    case "net":
+      generateBalanceChart();
+
+      break;
     default:
       generateIntervalData();
       break;
   }
 }
+
 function generateIntervalChart() {
+  generateBasicData();
+
+  if (dataSet.length >= 2) { // fills in empty days
+    var dateOne, dateTwo;
+    for (var i = 0; i < dataSet.length-1; i++) {
+      dateOne = dataSet[i]["date"];
+      dateTwo = dataSet[i+1]["date"];
+      if (dateTwo.getTime() - dateOne.getTime() > 24 * 3600 * 1000) {
+        dataSet.splice(i+1,0,{
+          date: new Date(dateOne.getYear()+1900, dateOne.getMonth(), dateOne.getDate()+1),
+          y: 0,
+          transactions: []
+        });
+      }
+    }
+  }
+
+  dataSeries = {
+    showInLegend: false,
+    data:dataSet,
+    pointStart: dataSet[0]["date"].getTime(),
+    pointInterval: 24 * 3600 * 1000
+  }
+  options = generateBasicOptions();
+  options['chart']['type'] = 'column';
+  options['title']['text'] = 'Spendings in the Past Month';
+  options.series.push(dataSeries); 
+  chart = new Highcharts.Chart(options)
+
+  var sum = 0;
+  for (var i = 0; i < dataSet.length; i++) {
+    console.log(dataSet[i]['y']);
+    sum+= dataSet[i]['y'];
+  }
+  $("#information").html("Average expenditure per day: $" + formatNum(sum/30));
+}
+
+function generateBalanceChart(){
+  generateBasicData();
+  var currentDate = new Date();
+  dataSet.push({
+    date: currentDate,
+    y: flex+mealPlan,
+    transactions: []
+  });
+  for (var i = dataSet.length-2; i >= 0; i--) {
+    dataSet[i]["y"]+=dataSet[i+1]["y"];
+  }
+
+  dataSeries = {
+    showInLegend: false,
+    data:dataSet,
+    pointStart: dataSet[0]["date"].getTime(),
+    pointInterval: 24 * 3600 * 1000
+  }
+  options = generateBasicOptions();
+  options['chart']['type'] = 'line';
+  options['title']['text'] = 'Balance Over Time';
+  options['yAxis']['min'] = 0;
+  options.series.push(dataSeries);
+
+  chart = new Highcharts.Chart(options);
+
+  var daysUntilZeroBalance =dataSet[dataSet.length-1]['y']/(dataSet[0]['y'] - dataSet[dataSet.length-1]['y'])*30;
+  var d = new Date(currentDate.getYear()+1900, currentDate.getMonth(), currentDate.getDate()+Math.round(daysUntilZeroBalance));
+  $("#information").html("Projected date to have zero balance: " + d.toDateString());
+}
+
+function generateBasicData() {
   for (var i = 0; i < transactions.length; i++) { // generates dataSet from transactions
     var transaction = transactions[i];
     var date = new Date(transaction["date"]);
@@ -112,43 +181,16 @@ function generateIntervalChart() {
     }
   }
   dataSet.sort(sortByDate());
-  if (dataSet.length >= 2) { // fills in empty days
-    var dateOne, dateTwo;
-    for (var i = 0; i < dataSet.length-1; i++) {
-      dateOne = dataSet[i]["date"];
-      dateTwo = dataSet[i+1]["date"];
-      if (dateTwo.getTime() - dateOne.getTime() > 24 * 3600 * 1000) {
-        dataSet.splice(i+1,0,{
-          date: new Date(dateOne.getYear()+1900, dateOne.getMonth(), dateOne.getDate()+1),
-          amount: 0,
-          transactions: []
-        });
-      }
-    }
-  }
-
-  dataSeries = {
-    showInLegend: false,
-    data:dataSet,
-    pointStart: dataSet[0]["date"].getTime(),
-    pointInterval: 24 * 3600 * 1000
-  }
-  options = generateIntervalChartOptions();
-  options.series.push(dataSeries);
-
-  chart = new Highcharts.Chart(options)
 }
 
-function generateIntervalChartOptions() {
+function generateBasicOptions() {
   var options = {
     'chart': {
-      'type':'column',
       'renderTo':'container'
     },
     'title': {
-      'text': 'Spendings in the past month'
+      'text': ''
     },
-
     'xAxis': {
       type: 'datetime',
       labels: {
@@ -158,24 +200,9 @@ function generateIntervalChartOptions() {
       'tickInterval': 1000 * 3600 * 24,
       'alternateGridColor': '#FAFAFA'
     },
-    /*
-    'yAxis': [{
-      'title': {
-        'text': yAxisLabel
-      },
-      'plotLines': []     
+    'yAxis': {
+      'min': 0
     },
-    {
-      'title' : {
-        'text': yAxisLabel
-      },
-      'linkedTo':0,
-      'opposite':true
-    }],
-    'legend': {
-      'enabled':false
-    },*/
-
     'series': [],
     'tooltip': {
       'followPointer':true,
@@ -195,7 +222,10 @@ function generateIntervalChartOptions() {
           'cursor':'pointer'
         },
         'stickyTracking' : true
-      }
+      }     
+    },
+    credits: {
+     enabled: false
     }
   };
   return options;

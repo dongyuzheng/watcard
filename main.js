@@ -33,11 +33,32 @@ $("body").on('click', '#login_button', function() {
   performLogin();
 });
 
+$("body").on('click', '#back_button', function() {
+  loadOverview();
+});
+
 $("body").on('keypress', '#uid,#pin,#remember', function(e) {
   if(e.which == 13) {
       performLogin();;
   }
 });
+
+$("body").on('click', '#daily_spending_button', function(){
+	currentGraph = "interval";
+	loadGraphs();
+});
+
+$("body").on('click', '#balance_over_time_button', function() {
+	currentGraph = "net";
+	loadGraphs();
+})
+
+$("body").on('click', '#logout_button', function(){
+	chrome.storage.sync.clear();
+    resetVariables();
+    loadLogin();
+});
+
 
 $(document).ready(function() {
   currentClass = "loading";
