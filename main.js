@@ -21,7 +21,7 @@ function login(id,pin) {
 function performLogin() {
   var id = $("#uid").val();
   var pin = $("#pin").val();
-  if (id.length != 8 || pin.length != 4) {
+  if (id.length != 8 || pin.length < 4 || pin.length > 6) {
     return;
   }
   if ($('#remember').prop('checked')) {
