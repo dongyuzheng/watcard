@@ -1,6 +1,19 @@
 function login(id,pin) {
   getBalance(id,pin);
-  getSpendings(id,pin,"3/1/2014","11/11/2015");
+
+  var date = new Date();
+  var dd = date.getDate() + 1;
+  var mm = date.getMonth()+1; //January is 0!
+  var yyyy = date.getFullYear();
+
+  var today = mm+'/'+dd+'/'+yyyy;
+
+  date.setMonth(date.getMonth() - 1);
+  dd = today.getDate();
+  mm = today.getMonth() + 1; //January is 0!
+  yyyy = today.getFullYear();
+
+  getSpendings(id,pin,mm+'/'+dd+'/'+yyyy,today);
 }
 
 $("body").on('click', '#login_button', function() {
