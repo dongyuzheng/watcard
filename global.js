@@ -6,6 +6,7 @@ var balances = [];
 var flex = 0;
 var mealPlan = 0;
 var transactions = [];
+var startTime, endTime;
 
 var interval = "day";
 var currentClass = "loading";
@@ -165,12 +166,25 @@ function generateBalanceChart() {
 
     chart = new Highcharts.Chart(options);
 
-    var daysUntilZeroBalance = dataSet[dataSet.length - 1]['y'] / (dataSet[0]['y'] - dataSet[dataSet.length-1]['y']) * 30;
-    var d = new Date(currentDate.getYear() + 1900, currentDate.getMonth(), currentDate.getDate() + Math.round(daysUntilZeroBalance));
-    $("#information").html("Projected date to have zero balance: " + d.toDateString());
+    var changeInBalance = dataSet[0]['y'] - dataSet[dataSet.length-1]['y'];
+    if (changeInBalance > 0 && dataSet[dataSet.length-1]['y'] > 0) {
+        var daysUntilZeroBalance = dataSet[dataSet.length - 1]['y'] / (dataSet[0]['y'] - dataSet[dataSet.length-1]['y']) * 30;
+        var d = new Date(currentDate.getYear() + 1900, currentDate.getMonth(), currentDate.getDate() + Math.round(daysUntilZeroBalance));
+        $("#information").html("Projected date to have zero balance: " + d.toDateString());
+    }
 }
 
 function generateBasicData() {
+    dataSet.push({
+        date:startTime,
+        y: 0,
+        transactions:[]
+    })
+    dataSet.push({
+        date:endTime,
+        y: 0,
+        transactions:[]
+    })
   for (var i = 0; i < transactions.length; i++) { // generates dataSet from transactions
     var transaction = transactions[i];
     var date = new Date(transaction["date"]).getTime();
@@ -243,6 +257,18 @@ function generateBasicOptions() {
             plotOptions: {
                 series: {
                     cursor: 'pointer'
+                },
+                fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
                 },
                 stickyTracking : true
             }     
