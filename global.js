@@ -31,16 +31,18 @@ function resetVariables() {
 }
 
 function loadLogin() {
-  changeClass("login");
+  changeClass("loading");
   $("#popup-info").load(chrome.extension.getURL("login.html"), function() {
-
+    changeClass("login");
   })
 }
 
 function loadOverview() {
   if (balanceLoaded){
-  	changeClass("overview")
+    changeClass("loading");
+
   	$("#popup-info").load(chrome.extension.getURL("popupContent.html"), function() {
+      changeClass("overview");
   	  $("#user").html(name);
   	  $("#flex").html("$"+flex);
   	  $("#meal-plan").html("$"+mealPlan);
@@ -61,8 +63,9 @@ function loadOverview() {
 
 function loadGraphs() {
 	if (transactionsLoaded) {
-	  changeClass("");
+	  changeClass("loading");
 	  $("#popup-info").load(chrome.extension.getURL("graphs.html"), function() {
+      changeClass("graphs");
     });
 	}
 }

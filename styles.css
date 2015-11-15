@@ -1,9 +1,9 @@
 .login {
-	
+
 }
 
 .loading {
-	width: 120px;
+	width: 240px;
 	height: 120px;
 	background: url('chrome-extension://__MSG_@@extension_id__/loading.gif');
 	background-repeat: no-repeat;
