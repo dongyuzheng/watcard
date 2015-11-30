@@ -1,14 +1,19 @@
+function getMonthBack(d) {
+  return new Date(d.getTime() - 30 * 24 * 60 * 60 * 1000);
+}
+
 function login(id,pin) {
   getBalance(id,pin);
 
   var date = new Date();
-  var dd = date.getDate() + 1;
+  var dd = date.getDate();
   var mm = date.getMonth() + 1; //January is 0!
+
   var yyyy = date.getFullYear();
   endTime = Date.parse(mm+"/"+dd+"/"+yyyy);
   var today = mm+'/'+dd+'/'+yyyy;
 
-  date.setMonth(date.getMonth() - 1);
+  date = getMonthBack(date);
   dd = date.getDate();
   mm = date.getMonth() + 1; //January is 0!
   yyyy = date.getFullYear();
